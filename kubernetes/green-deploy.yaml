@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8-nginx-app-2
+  name: k8-nginx-green
 spec:
   replicas: 3
   selector:
       matchLabels:
-        app: k8-nginx-app
+        app: k8-nginx-green
   template:
     metadata:
       labels:
-        app: k8-nginx-app
+        app: k8-nginx-green
     spec:
       containers: 
-        - name: k8-nginx-app
+        - name: k8-nginx-green
           image: ahdevops.azurecr.io/k8-green-nginx:1
           ports:
             - name: http

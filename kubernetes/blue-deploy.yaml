@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8-nginx-app-deployment
+  name: k8-nginx-blue
 spec:
   replicas: 3
   selector:
       matchLabels:
-        app: k8-nginx-app
+        app: k8-nginx-blue
   template:
     metadata:
       labels:
-        app: k8-nginx-app
+        app: k8-nginx-blue
     spec:
       containers: 
-        - name: k8-nginx-app
+        - name: k8-nginx-blue
           image: ahdevops.azurecr.io/k8-blue-nginx:1
           ports:
             - name: http
