@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata: 
-  name: nginx
+  name: k8-nginx-app
   labels: 
-    app: nginx
+    app: k8-nginx-app
 spec:
   ports:
     - name: http
       port: 80
       targetPort: 80
   selector: 
-    app: nginx
+    app: k8-nginx-app
   type: LoadBalancer
