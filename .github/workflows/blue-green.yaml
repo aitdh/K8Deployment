@@ -14,7 +14,7 @@ on:
 
 env:
   ACR_NAME: demogaurav.azurecr.io
-  ACR_REPO_NAME: demogaurav.azurecr.io/docker-java-app
+  ACR_REPO_NAME: ahdevops.azurecr.io/docker-java-app
   ARTIFACT_NAME: docker-java-app
   RESOURCE_GROUP: Gaurav-RG
   AKS_CLUSTER_NAME: Gaurav-AKS-cluster
