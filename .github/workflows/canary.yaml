@@ -40,8 +40,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:fva
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:fva
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:fva
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:fva
 
       - name: Set cluster context
         uses: azure/aks-set-context@v1
