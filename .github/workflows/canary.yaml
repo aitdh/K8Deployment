@@ -134,7 +134,7 @@ jobs:
             ahdevops.azurecr.io/k8-green-nginx:test-image
           strategy: canary
           traffic-split-method: pod
-          action: promote  #deploy is the default; we will later use this to promote/reject
+          action: reject  #deploy is the default; we will later use this to promote/reject
           percentage: 20
           baseline-and-canary-replicas: 2
 
@@ -148,7 +148,7 @@ jobs:
             ./kubernetes/blue-deploy.yaml
           images: |
             ahdevops.azurecr.io/k8-green-nginx:1
-          strategy: canary
+          strategy: promote
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
           percentage: 20
