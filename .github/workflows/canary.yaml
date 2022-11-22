@@ -40,8 +40,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:1
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:1
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:test-image
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:test-image
 
       - name: Set cluster context
         uses: azure/aks-set-context@v1
@@ -63,7 +63,7 @@ jobs:
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:1
+            ahdevops.azurecr.io/k8-green-nginx:test-image
           strategy: canary
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
