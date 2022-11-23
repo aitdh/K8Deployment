@@ -90,41 +90,9 @@ jobs:
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.RESOURCE_GROUP }}
 
-      # - name: Promote App
-      #   uses: azure/k8s-deploy@v1.3
-      #   if: ${{ success() }}
-      #   with:
-      #     namespace: default
-      #     manifests: |
-      #       ./kubernetes/service.yaml
-      #       ./kubernetes/green-deploy.yaml
-      #     images: |
-      #       ahdevops.azurecr.io/k8-green-nginx:test
-      #     strategy: canary
-      #     traffic-split-method: pod
-      #     action: promote  #deploy is the default; we will later use this to promote/reject
-      #     percentage: 20
-      #     baseline-and-canary-replicas: 2
-
-      # - name: Reject App
-      #   uses: azure/k8s-deploy@v1.3
-      #   if: ${{ failure() }}
-      #   with:
-      #     namespace: default
-      #     manifests: |
-      #       ./kubernetes/service.yaml
-      #       ./kubernetes/blue-deploy.yaml
-      #     images: |
-      #       ahdevops.azurecr.io/k8-green-nginx:test
-      #     strategy: canary
-      #     traffic-split-method: pod
-      #     action: reject  #deploy is the default; we will later use this to promote/reject
-      #     percentage: 20
-      #     baseline-and-canary-replicas: 2
-
-      - name: Reject App
+      - name: Promote App
         uses: azure/k8s-deploy@v1.3
-        if: ${{ failure() }}
+        if: ${{ success() }}
         with:
           namespace: default
           manifests: |
@@ -134,13 +102,13 @@ jobs:
             ahdevops.azurecr.io/k8-green-nginx:test
           strategy: canary
           traffic-split-method: pod
-          action: reject  #deploy is the default; we will later use this to promote/reject
+          action: promote  #deploy is the default; we will later use this to promote/reject
           percentage: 20
           baseline-and-canary-replicas: 2
 
-      - name: Promote App
+      - name: Reject App
         uses: azure/k8s-deploy@v1.3
-        if: ${{ success() }}
+        if: ${{ failure() }}
         with:
           namespace: default
           manifests: |
@@ -150,6 +118,38 @@ jobs:
             ahdevops.azurecr.io/k8-green-nginx:test
           strategy: canary
           traffic-split-method: pod
-          action: promote  #deploy is the default; we will later use this to promote/reject
+          action: reject  #deploy is the default; we will later use this to promote/reject
           percentage: 20
           baseline-and-canary-replicas: 2
+
+      # - name: Reject App
+      #   uses: azure/k8s-deploy@v1.3
+      #   if: ${{ failure() }}
+      #   with:
+      #     namespace: default
+      #     manifests: |
+      #       ./kubernetes/service.yaml
+      #       ./kubernetes/green-deploy.yaml
+      #     images: |
+      #       ahdevops.azurecr.io/k8-green-nginx:test
+      #     strategy: canary
+      #     traffic-split-method: pod
+      #     action: reject  #deploy is the default; we will later use this to promote/reject
+      #     percentage: 20
+      #     baseline-and-canary-replicas: 2
+
+      # - name: Promote App
+      #   uses: azure/k8s-deploy@v1.3
+      #   if: ${{ success() }}
+      #   with:
+      #     namespace: default
+      #     manifests: |
+      #       ./kubernetes/service.yaml
+      #       ./kubernetes/blue-deploy.yaml
+      #     images: |
+      #       ahdevops.azurecr.io/k8-green-nginx:test
+      #     strategy: canary
+      #     traffic-split-method: pod
+      #     action: promote  #deploy is the default; we will later use this to promote/reject
+      #     percentage: 20
+      #     baseline-and-canary-replicas: 2
