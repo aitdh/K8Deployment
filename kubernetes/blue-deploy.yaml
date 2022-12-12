@@ -14,7 +14,7 @@ spec:
     spec:
       containers: 
         - name: k8-nginx-app
-          image: ahdevops.azurecr.io/k8-blue-nginx:test
+          image: ahdevops.azurecr.io/k8-blue-nginx:test-blue
           ports:
             - name: http
               containerPort: 80
