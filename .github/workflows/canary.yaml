@@ -21,7 +21,7 @@ jobs:
   # This workflow contains a single job called "build"
   deployapp:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -40,8 +40,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:test-green
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-green-nginx:test-green
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
 
       - name: Set cluster context
         uses: azure/aks-set-context@v1
@@ -71,14 +71,14 @@ jobs:
           baseline-and-canary-replicas: 2
 
   approveapp:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: deployapp
     environment: akspromotion
     steps:
       - run: echo asked for approval
 
   promotereject:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: approveapp
     steps:
       - uses: actions/checkout@v2
@@ -90,9 +90,41 @@ jobs:
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.RESOURCE_GROUP }}
 
-      - name: Promote App
+  #     - name: Promote App
+  #       uses: azure/k8s-deploy@v1.3
+  #       if: ${{ success() }}
+  #       with:
+  #         namespace: default
+  #         manifests: |
+  #           ./kubernetes/service.yaml
+  #           ./kubernetes/green-deploy.yaml
+  #         images: |
+  #           ahdevops.azurecr.io/k8-green-nginx:test-green
+  #         strategy: canary
+  #         traffic-split-method: pod
+  #         action: promote  #deploy is the default; we will later use this to promote/reject
+  #         percentage: 20
+  #         baseline-and-canary-replicas: 2
+
+  #     - name: Reject App
+  #       uses: azure/k8s-deploy@v1.3
+  #       if: ${{ failure() }}
+  #       with:
+  #         namespace: default
+  #         manifests: |
+  #           ./kubernetes/service.yaml
+  #           ./kubernetes/blue-deploy.yaml
+  #         images: |
+  #           ahdevops.azurecr.io/k8-green-nginx:test-green
+  #         strategy: canary
+  #         traffic-split-method: pod
+  #         action: reject  #deploy is the default; we will later use this to promote/reject
+  #         percentage: 20
+  #         baseline-and-canary-replicas: 2
+
+      - name: Reject App
         uses: azure/k8s-deploy@v1.3
-        if: ${{ success() }}
+        if: ${{ failure() }}
         with:
           namespace: default
           manifests: |
@@ -102,54 +134,22 @@ jobs:
             ahdevops.azurecr.io/k8-green-nginx:test-green
           strategy: canary
           traffic-split-method: pod
-          action: promote  #deploy is the default; we will later use this to promote/reject
+          action: reject  #deploy is the default; we will later use this to promote/reject
           percentage: 20
           baseline-and-canary-replicas: 2
 
-      - name: Reject App
+      - name: Promote App
         uses: azure/k8s-deploy@v1.3
-        if: ${{ failure() }}
+        if: ${{ success() }}
         with:
           namespace: default
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:test-green
+            ahdevops.azurecr.io/k8-blue-nginx:test-blue
           strategy: canary
           traffic-split-method: pod
-          action: reject  #deploy is the default; we will later use this to promote/reject
+          action: promote  #deploy is the default; we will later use this to promote/reject
           percentage: 20
           baseline-and-canary-replicas: 2
-
-      # - name: Reject App
-      #   uses: azure/k8s-deploy@v1.3
-      #   if: ${{ failure() }}
-      #   with:
-      #     namespace: default
-      #     manifests: |
-      #       ./kubernetes/service.yaml
-      #       ./kubernetes/green-deploy.yaml
-      #     images: |
-      #       ahdevops.azurecr.io/k8-green-nginx:test
-      #     strategy: canary
-      #     traffic-split-method: pod
-      #     action: reject  #deploy is the default; we will later use this to promote/reject
-      #     percentage: 20
-      #     baseline-and-canary-replicas: 2
-
-      # - name: Promote App
-      #   uses: azure/k8s-deploy@v1.3
-      #   if: ${{ success() }}
-      #   with:
-      #     namespace: default
-      #     manifests: |
-      #       ./kubernetes/service.yaml
-      #       ./kubernetes/blue-deploy.yaml
-      #     images: |
-      #       ahdevops.azurecr.io/k8-green-nginx:test
-      #     strategy: canary
-      #     traffic-split-method: pod
-      #     action: promote  #deploy is the default; we will later use this to promote/reject
-      #     percentage: 20
-      #     baseline-and-canary-replicas: 2
