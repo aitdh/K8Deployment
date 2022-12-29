@@ -33,15 +33,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-      - name: 'Build and push image'
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-      - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
+      # - name: 'Build and push image'
+      #   uses: azure/docker-login@v1
+      #   with:
+      #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
+      # - run: |
+      #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
+      #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/k8-blue-nginx:test-blue
 
       - name: Set cluster context
         uses: azure/aks-set-context@v1
@@ -63,7 +63,7 @@ jobs:
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:test-green
+            ahdevops.azurecr.io/employee-api:Green.1.0.0.7
           strategy: canary
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -131,7 +131,7 @@ jobs:
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:test-green
+            ahdevops.azurecr.io/employee-api:Green.1.0.0.7
           strategy: canary
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
@@ -147,7 +147,7 @@ jobs:
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-blue-nginx:test-blue
+            ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
           strategy: canary
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
