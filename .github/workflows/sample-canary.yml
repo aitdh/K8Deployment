@@ -48,7 +48,7 @@ jobs:
             ./sample-kubernetes/service.yaml
             ./sample-kubernetes/blue-deploy.yaml
           images: |
-            demogaurav.azurecr.io/green-nginx:1
+            ahdevops.azurecr.io/k8-green-nginx:test
           strategy: canary
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -84,7 +84,7 @@ jobs:
             ./sample-kubernetes/service.yaml
             ./sample-kubernetes/green-deploy.yaml
           images: |
-            demogaurav.azurecr.io/green-nginx:1
+            ahdevops.azurecr.io/k8-green-nginx:test
           strategy: canary
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
@@ -100,7 +100,7 @@ jobs:
             ./sample-kubernetes/service.yaml
             ./sample-kubernetes/blue-deploy.yaml
           images: |
-            demogaurav.azurecr.io/green-nginx:1
+            ahdevops.azurecr.io/k8-green-nginx:test
           strategy: canary
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject

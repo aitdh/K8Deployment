@@ -14,7 +14,7 @@ spec:
     spec:
       containers: 
         - name: nginx
-          image: demogaurav.azurecr.io/blue-nginx:1
+          image: ahdevops.azurecr.io/k8-blue-nginx:test
           ports:
             - name: http
               containerPort: 80
