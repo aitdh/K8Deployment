@@ -46,9 +46,9 @@ jobs:
           namespace: default
           manifests: |
             ./sample-kubernetes/service.yaml
-            ./sample-kubernetes/blue-deploy.yaml
+            ./sample-kubernetes/green-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:test
+            ahdevops.azurecr.io/k8-blue-nginx:test
           strategy: canary
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -130,9 +130,9 @@ jobs:
           namespace: default
           manifests: |
             ./sample-kubernetes/service.yaml
-            ./sample-kubernetes/blue-deploy.yaml
+            ./sample-kubernetes/green-deploy.yaml
           images: |
-            ahdevops.azurecr.io/k8-green-nginx:test
+            ahdevops.azurecr.io/k8-blue-nginx:test
           strategy: canary
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
