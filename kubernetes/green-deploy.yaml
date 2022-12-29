@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: k8-nginx-green
 spec:
-  replicas: 3
+  replicas: 0
   selector:
       matchLabels:
         app: k8-nginx-app
