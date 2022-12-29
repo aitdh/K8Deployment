@@ -6,9 +6,9 @@ name: Canary-strategy
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main-not-active ]
+    branches: [ main ]
   pull_request:
-    branches: [ main-not-active ]
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -61,7 +61,7 @@ jobs:
           namespace: default
           manifests: |
             ./kubernetes/service.yaml
-            ./kubernetes/green-deploy.yaml
+            ./kubernetes/blue-deploy.yaml
           images: |
             ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
           strategy: canary
@@ -131,12 +131,12 @@ jobs:
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
           images: |
-            ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
+            ahdevops.azurecr.io/employee-api:Green.1.0.0.7
           strategy: canary
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
-          percentage: 20
-          baseline-and-canary-replicas: 2
+          percentage: 100
+          baseline-and-canary-replicas: 0
 
       - name: Promote App
         uses: azure/k8s-deploy@v1.3
@@ -151,5 +151,5 @@ jobs:
           strategy: canary
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
-          percentage: 20
-          baseline-and-canary-replicas: 2
+          percentage: 100
+          baseline-and-canary-replicas: 0
