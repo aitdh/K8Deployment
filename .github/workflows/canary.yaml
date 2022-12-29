@@ -153,3 +153,20 @@ jobs:
           action: promote  #deploy is the default; we will later use this to promote/reject
           percentage: 100
           baseline-and-canary-replicas: 0
+
+
+      - name: Remove Old App
+        uses: azure/k8s-deploy@v1.3
+        if: ${{ success() }}
+        with:
+          namespace: default
+          manifests: |
+            ./kubernetes/service.yaml
+            ./kubernetes/blue-deploy.yaml
+          images: |
+            ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
+          strategy: canary
+          traffic-split-method: pod
+          action: deploy  #deploy is the default; we will later use this to promote/reject
+          percentage: 0
+          baseline-and-canary-replicas: 0
