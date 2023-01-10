@@ -91,36 +91,36 @@ jobs:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
 
       - name: Promote App
-         uses: azure/k8s-deploy@v1.3
-         if: ${{ success() }}
-         with:
-           namespace: default
-           manifests: |
-             ./kubernetes/service.yaml
-             ./kubernetes/green-deploy.yaml
-           images: |
-             ahdevops.azurecr.io/employee-api:Green.1.0.0.7
-           strategy: canary
-           traffic-split-method: pod
-           action: promote  #deploy is the default; we will later use this to promote/reject
-           percentage: 100
-           baseline-and-canary-replicas: 0
+        uses: azure/k8s-deploy@v1.3
+        if: ${{ success() }}
+        with:
+          namespace: default
+          manifests: |
+            ./kubernetes/service.yaml
+            ./kubernetes/green-deploy.yaml
+          images: |
+            ahdevops.azurecr.io/employee-api:Green.1.0.0.7
+          strategy: canary
+          traffic-split-method: pod
+          action: promote  #deploy is the default; we will later use this to promote/reject
+          percentage: 100
+          baseline-and-canary-replicas: 0
 
-       - name: Reject App
-         uses: azure/k8s-deploy@v1.3
-         if: ${{ failure() }}
-         with:
-           namespace: default
-           manifests: |
-             ./kubernetes/service.yaml
-             ./kubernetes/blue-deploy.yaml
-           images: |
-             ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
-           strategy: canary
-           traffic-split-method: pod
-           action: reject  #deploy is the default; we will later use this to promote/reject
-           percentage: 100
-           baseline-and-canary-replicas: 0
+      - name: Reject App
+        uses: azure/k8s-deploy@v1.3
+        if: ${{ failure() }}
+        with:
+          namespace: default
+          manifests: |
+            ./kubernetes/service.yaml
+            ./kubernetes/blue-deploy.yaml
+          images: |
+            ahdevops.azurecr.io/employee-api:Blue.1.0.0.7
+          strategy: canary
+          traffic-split-method: pod
+          action: reject  #deploy is the default; we will later use this to promote/reject
+          percentage: 100
+          baseline-and-canary-replicas: 0
 
       # - name: Reject App
       #   uses: azure/k8s-deploy@v1.3
