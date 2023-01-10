@@ -61,7 +61,7 @@ jobs:
           namespace: default
           manifests: |
             ./kubernetes/service.yaml
-            ./kubernetes/blue-deploy.yaml
+            ./kubernetes/green-deploy.yaml
           images: |
             ahdevops.azurecr.io/employee-api:Green.1.0.0.7
           strategy: canary
