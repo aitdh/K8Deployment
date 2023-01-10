@@ -90,7 +90,7 @@ jobs:
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.RESOURCE_GROUP }}
 
-       - name: Promote App
+      - name: Promote App
          uses: azure/k8s-deploy@v1.3
          if: ${{ success() }}
          with:
