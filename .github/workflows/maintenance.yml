@@ -1,0 +1,32 @@
+name: Maintenance K8Deployment
+on: workflow_dispatch
+
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: maintenance
+    env:
+      Greeting: Namesta
+    steps:
+      - name: "Get Runner ID"
+        run: echo ${{ github.run_id }}
+      - name:
+        run: echo "WORKFLOW_STATUS= starting" >> $GITHUB_ENV
+      - name: "Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!. Welcome to ${{ vars.AIT_DH_GROUP_NAME }}, Show me the value ${{ secrets.RESOURCE_GROUP }}" && sleep 30
+        env:
+          First_Name: Bibek
+    
+  test:
+    runs-on: ubuntu-latest
+    env:
+      Greeting: Hola
+    steps:
+      - name: "Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!. Welcome to ${{ vars.AIT_DH_GROUP_NAME }}"
+        env:
+          First_Name: Carlos
